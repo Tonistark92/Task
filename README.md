@@ -20,3 +20,4 @@
 - Implement RecyclerView to display lists of data efficiently.
 - Utilize DiffUtil to calculate and efficiently update the contents of RecyclerView when the underlying data changes.
 
+![demo](https://github.com/Tonistark92/Task/assets/86676102/0d372a50-c454-448a-aa87-95d0c5d085a0)
