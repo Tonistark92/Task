@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/posts_graph"
+    app:startDestination="@id/allPostsFragment">
+
+    <fragment
+        android:id="@+id/allPostsFragment"
+        android:name="com.iscoding.mytask.presentation.screens.allpostsscreen.AllPostsFragment"
+        android:label="fragment_all_posts"
+        tools:layout="@layout/fragment_all_posts" >
+        <action
+            android:id="@+id/action_allPostsFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+<!--        <argument-->
+<!--            android:name="myId"-->
+<!--            app:argType="integer"-->
+<!--            android:defaultValue="0" />-->
+    </fragment>
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.iscoding.mytask.presentation.screens.detailsScreen.DetailsFragment"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details" />
+</navigation>
