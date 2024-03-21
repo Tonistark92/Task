@@ -13,11 +13,9 @@
         <action
             android:id="@+id/action_allPostsFragment_to_detailsFragment"
             app:destination="@id/detailsFragment" >
-            <argument
-                android:name="postId"
-                app:argType="integer"
-                android:defaultValue="0"/>
+
         </action>
+
 
 
     </fragment>
@@ -25,6 +23,11 @@
         android:id="@+id/detailsFragment"
         android:name="com.iscoding.mytask.presentation.screens.detailsScreen.DetailsFragment"
         android:label="fragment_details"
-        tools:layout="@layout/fragment_details" />
+        tools:layout="@layout/fragment_details" >
+        <argument
+            android:name="postId"
+            app:argType="integer"
+            android:defaultValue="0"/>
+    </fragment>
 
 </navigation>

@@ -34,11 +34,9 @@ class AllPostsFragment : Fragment() {
                 if (state.isLoading) {
                     // Show progress bar when loading
                     binding.progressBar.visibility = View.VISIBLE
-                    Log.d("ISLAM","LOADING  is ${state.isLoading}")
                 } else {
                     // Hide progress bar when not loading
                     binding.progressBar.visibility = View.GONE
-                    Log.d("ISLAM","LOADING  is ${state.isLoading}")
 
                     // Update RecyclerView adapter and dataset when not loading
                     val itemAdapter = ItemAdapter{ postId ->

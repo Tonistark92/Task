@@ -18,24 +18,19 @@ class AllPostsViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(AllPostsState())
     val state get() = _state.asStateFlow()
-    var count = 0
 
     fun getAllPosts() {
         viewModelScope.launch {
             useCase.getAllPosts().collect { result ->
                 when (result) {
                     is Resource.Loading -> {
-                        Log.d("ISLAM", "ENTERED LOADING")
                         _state.value = _state.value.copy(isLoading = result.isLoading)
                     }
                     is Resource.Success -> {
-                        Log.d("ISLAM", "ENTERED SUCCESS")
                             _state.value = _state.value.copy(
                                 posts = result.data!!,
                                 isLoading = false
                             )
-                            count++
-                            Log.d("ISLAM", "count $count")
 
                     }
                     is Resource.Error -> {

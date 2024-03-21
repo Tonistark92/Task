@@ -1,9 +1,15 @@
 package com.iscoding.mytask.presentation.screens.detailsScreen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.navArgs
 import com.iscoding.mytask.domain.usecases.PostsUseCase
+import com.iscoding.mytask.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -12,61 +18,47 @@ class DetailsViewModel @Inject constructor(
 
 ) : ViewModel() {
     private val _state = MutableStateFlow(DetailsPostState())
-    val state: MutableStateFlow<DetailsPostState> get() = _state
-//    val args= DetailsFragmentArgs.fromBundle(arguments)
-    init {
-//        viewModelScope.launch {
-//            Log.d("HI", "In Viewmodel")
-//            // if it did work i should get the args here but casue nav component had bug
-            // the navigation component had bug in identifying the args cant pass the args
-            // idk if u want me to use fragment manager to complete the task
-            // but i left the code if the nav worked i would use and it would work
-//            useCase.getPost(args.id).collect { result ->
-//                when (result) {
-//                    is Resource.Loading -> {}
-//                    is Resource.Success -> {
-//                    }
-//
-//                    is Resource.Error -> {}
-//                }
-//
-//            }
-//        }
+    val state get() = _state.asStateFlow()
+    var postId :Int =0
+
+    fun setId(id: Int) {
+        postId = id
     }
 
-
     fun getPost() {
-//        viewModelScope.launch {
-//            useCase.getPost(args.id).collect { result ->
-//                when (result) {
-//                    is Resource.Loading -> {
-//                        _state.value = _state.value.copy(isLoading = true)
-//                    }
-//                    is Resource.Success -> {
-//                        if (result.data?.id.toString().isEmpty()) {
-//                            _state.value = _state.value.copy(
-//                                isLoading = false,
-//                                notFound = true
-//                            )
-//                        } else {
-//                            _state.value = _state.value.copy(
-//                                post = result.data,
-//                                isLoading = false,
-//                                notFound = false
-//                            )
-//                        }
-//                    }
-//
-//                    is Resource.Error -> {
-//                        _state.value = _state.value.copy(
-//                            isLoading = false,
-//                            notFound = true
-//                        )
-//                    }
-//                }
-//
-//            }
-//        }
+        viewModelScope.launch {
+            useCase.getPost(postId).collect { result ->
+                when (result) {
+                    is Resource.Loading -> {
+                        _state.value = _state.value.copy(isLoading = result.isLoading)
+                    }
+                    is Resource.Success -> {
+                        if (result.data?.id.toString().isEmpty()) {
+                            _state.value = _state.value.copy(
+                                isLoading = false,
+                                notFound = true
+                            )
+                        } else {
+                            _state.value = _state.value.copy(
+                                post = result.data,
+                                isLoading = false,
+                                notFound = false
+                            )
+                            Log.d("DATA" ,"viewmodel ${result.data.toString()}")
+
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        _state.value = _state.value.copy(
+                            isLoading = false,
+                            notFound = true
+                        )
+                    }
+                }
+
+            }
+        }
     }
 
 }

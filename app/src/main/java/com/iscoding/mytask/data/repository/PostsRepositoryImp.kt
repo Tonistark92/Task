@@ -12,14 +12,11 @@ import javax.inject.Inject
 class PostsRepositoryImp @Inject constructor(
     private val api: PostRemoteDataSource,
 ) :PostsRepository {
-    private var count =0
     override fun getAllPosts(): Flow<Resource<List<Post>>> = flow {
         emit(Resource.Loading(isLoading = true))
-        Log.d("ISLAM","COUNT IN REPO IS $count")
         val list = api.getAllPosts()
         emit(Resource.Success(data = list))
         emit(Resource.Loading(isLoading = false))
-        ++count
 
     }
 
