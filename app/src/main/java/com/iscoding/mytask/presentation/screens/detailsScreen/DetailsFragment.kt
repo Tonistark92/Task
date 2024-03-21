@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.iscoding.mytask.R
 import com.iscoding.mytask.databinding.FragmentAllPostsBinding
 import com.iscoding.mytask.databinding.FragmentDetailsBinding
@@ -14,6 +15,7 @@ import com.iscoding.mytask.databinding.FragmentDetailsBinding
 
 class DetailsFragment : Fragment() {
 
+//    private val args: DetailsFragmentArgs by navArgs()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

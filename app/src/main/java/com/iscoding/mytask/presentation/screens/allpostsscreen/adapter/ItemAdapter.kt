@@ -1,18 +1,16 @@
-package de.syntax_institut.telefonbuch.adapter
+package com.iscoding.mytask.presentation.screens.allpostsscreen.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.iscoding.mytask.data.remote.dto.Post
 import com.iscoding.mytask.databinding.ListItemBinding
 import com.iscoding.mytask.presentation.screens.allpostsscreen.AllPostsFragmentDirections
-import com.iscoding.mytask.presentation.screens.detailsScreen.DetailsViewModel
 
 
-class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
+class ItemAdapter(private val onItemClick: (Int) -> Unit)  : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
 
     private var dataset: List<Post> = emptyList()
 
@@ -30,8 +28,7 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
         holder.binding.tvItemBody.text = item.body
 
         holder.binding.contactCard.setOnClickListener {
-//          it.findNavController().navigate(  AllPostsFragmentDirections.actionAllPostsFragmentToDetailsFragment(postId = yourPostId))
-            it.findNavController().navigate(AllPostsFragmentDirections.actionAllPostsFragmentToDetailsFragment())
+            onItemClick(item.id) // Pass the ID to the click listener
         }
     }
 
