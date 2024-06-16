@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetPost @Inject constructor(
     private val repository: PostsRepository
 ) {
-    operator fun invoke(id: Int) = repository.getPost(id = id)
+    suspend operator fun invoke(id: Int) = repository.getPost(id = id)
 }

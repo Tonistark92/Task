@@ -60,6 +60,7 @@ dependencies {
     implementation ("androidx.navigation:navigation-ui-ktx:2.7.7")
     //hilt
     implementation("com.google.dagger:hilt-android:2.48")
+    implementation("androidx.compose.runtime:runtime-android:1.6.8")
     kapt("com.google.dagger:hilt-android-compiler:2.48")
     //retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -31,6 +32,14 @@ class AllPostsFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state.collect { state ->
+
+                if (state.errorMessage != null) {
+                    Toast.makeText(
+                        requireContext(),
+                        state.errorMessage!!.asString(requireContext()), Toast.LENGTH_LONG
+                    ).show()
+
+                }
                 if (state.isLoading) {
                     // Show progress bar when loading
                     binding.progressBar.visibility = View.VISIBLE
@@ -39,8 +48,11 @@ class AllPostsFragment : Fragment() {
                     binding.progressBar.visibility = View.GONE
 
                     // Update RecyclerView adapter and dataset when not loading
-                    val itemAdapter = ItemAdapter{ postId ->
-                        val action = AllPostsFragmentDirections.actionAllPostsFragmentToDetailsFragment(postId)
+                    val itemAdapter = ItemAdapter { postId ->
+                        val action =
+                            AllPostsFragmentDirections.actionAllPostsFragmentToDetailsFragment(
+                                postId
+                            )
                         findNavController().navigate(action)
 
                     }
@@ -49,8 +61,6 @@ class AllPostsFragment : Fragment() {
                 }
             }
         }
-
-
 
 
         // Inflate the layout for this fragment

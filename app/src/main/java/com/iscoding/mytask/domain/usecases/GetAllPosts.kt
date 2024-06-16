@@ -6,6 +6,6 @@ import javax.inject.Inject
 class GetAllPosts @Inject constructor(
 private val repository: PostsRepository
 ) {
-    operator fun invoke() = repository.getAllPosts()
+    suspend operator fun invoke() = repository.getAllPosts()
 
 }
