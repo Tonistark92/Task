@@ -2,6 +2,7 @@ package com.iscoding.mytask.di
 
 import com.google.gson.Gson
 import com.iscoding.mytask.data.remote.PostRemoteDataSource
+import com.iscoding.mytask.data.remote.RetryInterceptor
 import com.iscoding.mytask.domain.Constatns
 import com.iscoding.mytask.domain.repository.PostsRepository
 import com.iscoding.mytask.domain.usecases.GetAllPosts
@@ -11,6 +12,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
@@ -20,12 +22,20 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object MainModule {
     @Provides
+    fun provideOkHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(RetryInterceptor(maxRetries = 3, retryIntervalSeconds = 2))
+            .build()
+    }
+
+    @Provides
     @Singleton
-    fun provideRetrofit(): PostRemoteDataSource {
+    fun provideRetrofit(client: OkHttpClient): PostRemoteDataSource {
 
         return Retrofit.Builder()
             .baseUrl(Constatns.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(Gson()))
+            .client(client)
             .build()
             .create()
     }

@@ -115,3 +115,79 @@ class PostsRepositoryImp @Inject constructor(
     override suspend fun getPost(id: Int): Flow<com.iscoding.mytask.domain.error.Result<Post, DataError.Network>> =
         safeApiCall { api.getPost(postId = id) }
 }
+//changes if want to retry on one of those errors happend
+//
+//class PostsRepositoryImp @Inject constructor(
+//    private val api: PostRemoteDataSource,
+//) : PostsRepository {
+//
+//    companion object {
+//        const val MAX_RETRIES = 3
+//        const val RETRY_DELAY_MS = 2000L // 2 seconds
+//    }
+//
+//    private suspend fun <T> safeApiCall(apiCall: suspend () -> T): Flow<Result<T, DataError.Network>> =
+//        flow {
+//            var retries = 0
+//            var lastError: Throwable? = null
+//
+//            while (retries < MAX_RETRIES) {
+//                try {
+//                    emit(Result.Loading(isLoading = true))
+//                    val result = apiCall()
+//                    emit(Result.Success(data = result))
+//                    emit(Result.Loading(isLoading = false))
+//                    return@flow
+//                } catch (e: HttpException) {
+//                    when (e.code()) {
+//                        // Client Errors (4xx)
+//                        400 -> {
+//                            val errorResponse = e.response()?.errorBody()?.string()
+//                            val messages = extractMessagesFromErrorResponse(errorResponse)
+//                            if (messages.isNotEmpty()) {
+//                                emit(Result.Error(DataError.Network.BAD_REQUEST, messages))
+//                            } else {
+//                                emit(Result.Error(DataError.Network.BAD_REQUEST, listOf("Unknown error occurred")))
+//                            }
+//                        }
+//                        // Add more cases for other HTTP error codes you want to retry
+//                        else -> {
+//                            emit(Result.Error(DataError.Network.UNKNOWN)) // Any unspecified error
+//                            return@flow
+//                        }
+//                    }
+//                    lastError = e
+//                } catch (e: IOException) {
+//                    emit(Result.Error(DataError.Network.NO_INTERNET)) // No internet connection
+//                    lastError = e
+//                } catch (e: Exception) {
+//                    emit(Result.Error(DataError.Network.UNKNOWN)) // Any other unknown error
+//                    lastError = e
+//                }
+//
+//                // Retry after a delay if it's a retryable error
+//                if (shouldRetry(lastError)) {
+//                    retries++
+//                    delay(RETRY_DELAY_MS)
+//                } else {
+//                    return@flow
+//                }
+//            }
+//        }
+//
+//    private fun shouldRetry(error: Throwable?): Boolean {
+//        // Add conditions here to decide if you should retry based on specific errors
+//        return when (error) {
+//            is HttpException -> {
+//                when (error.code()) {
+//                    408, 500, 502, 503 -> true // Retry on these server errors
+//                    else -> false
+//                }
+//            }
+//            is IOException -> true // Retry on network-related errors
+//            else -> false
+//        }
+//    }
+//
+//    // Remaining methods unchanged...
+//}
