@@ -10,6 +10,8 @@ import com.iscoding.mytask.domain.repository.PostsRepository
 import com.iscoding.mytask.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import org.json.JSONException
+import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -28,7 +30,12 @@ class PostsRepositoryImp @Inject constructor(
             } catch (e: HttpException) {
                 when (e.code()) {
                     // Client Errors (4xx)
-                    400 -> emit(Result.Error(DataError.Network.BAD_REQUEST)) // Bad Request
+                    400 -> {
+                        val errorResponse = e.response()?.errorBody()?.string()
+                        val message = extractMessageFromErrorResponse(errorResponse)
+                        emit(Result.Error(DataError.Network.BAD_REQUEST, message))
+//                        emit(Result.Error(DataError.Network.BAD_REQUEST))
+                    } // Bad Request
                     404 -> emit(Result.Error(DataError.Network.NOT_FOUND)) // Not Found
                     405 -> emit(Result.Error(DataError.Network.METHOD_NOT_ALLOWED)) // Method Not Allowed
                     408 -> emit(Result.Error(DataError.Network.REQUEST_TIMEOUT)) // Request Timeout
@@ -54,6 +61,17 @@ class PostsRepositoryImp @Inject constructor(
                 emit(Result.Error(DataError.Network.UNKNOWN)) // Any other unknown error
             }
         }
+    private fun extractMessageFromErrorResponse(errorResponse: String?): String {
+        errorResponse?.let {
+            try {
+                val jsonObject = JSONObject(it)
+                return jsonObject.getString("message")
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+        }
+        return "Unknown error occurred"
+    }
 
     override suspend fun getAllPosts(): Flow<com.iscoding.mytask.domain.error.Result<List<Post>, DataError.Network>> =
         safeApiCall { api.getAllPosts() }

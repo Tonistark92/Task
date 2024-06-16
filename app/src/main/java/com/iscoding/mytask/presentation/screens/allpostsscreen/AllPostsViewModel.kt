@@ -7,6 +7,7 @@ import com.iscoding.mytask.domain.error.DataError
 import com.iscoding.mytask.domain.error.Result
 import com.iscoding.mytask.domain.usecases.PostsUseCase
 import com.iscoding.mytask.util.Resource
+import com.iscoding.mytask.util.UiText
 import com.iscoding.mytask.util.asUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,10 +23,12 @@ class AllPostsViewModel @Inject constructor(
     private val _state = MutableStateFlow(AllPostsState())
     val state get() = _state.asStateFlow()
 
+
     fun getAllPosts() {
         viewModelScope.launch {
             useCase.getAllPosts().collect { result ->
                 when(result){
+
                     is Result.Error -> {
                         _state.value = _state.value.copy(isLoading = false)
                         when (result.error){
@@ -43,7 +46,11 @@ class AllPostsViewModel @Inject constructor(
                             DataError.Network.BAD_GATEWAY -> TODO()
                             DataError.Network.GATEWAY_TIMEOUT -> TODO()
                             DataError.Network.METHOD_NOT_ALLOWED -> TODO()
-                            DataError.Network.BAD_REQUEST -> TODO()
+                            DataError.Network.BAD_REQUEST -> {
+                                _state.value = _state.value.copy(errorMessage = UiText.DynamicString(result.message!!))
+
+
+                            }
                             DataError.Network.NOT_FOUND -> TODO()
                             DataError.Network.UNSUPPORTED_MEDIA_TYPE -> TODO()
                             DataError.Network.CONFLICT -> TODO()
