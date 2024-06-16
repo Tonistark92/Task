@@ -9,11 +9,14 @@ sealed class UiText {
         @StringRes val id: Int,
         val args: Array<Any> = arrayOf()
     ) : UiText()
+    data class DynamicStringList(val messages: List<String>) : UiText()
 
     fun asString(context: Context): String {
         return when (this) {
             is DynamicString -> value
             is StringResource -> context.getString(id, *args)
+            is DynamicStringList -> messages.joinToString(separator = "\n")
+
         }
     }
 }

@@ -30,11 +30,17 @@ class PostsRepositoryImp @Inject constructor(
             } catch (e: HttpException) {
                 when (e.code()) {
                     // Client Errors (4xx)
-                    400 -> {
+                    400 ->{
                         val errorResponse = e.response()?.errorBody()?.string()
-                        val message = extractMessageFromErrorResponse(errorResponse)
-                        emit(Result.Error(DataError.Network.BAD_REQUEST, message))
-//                        emit(Result.Error(DataError.Network.BAD_REQUEST))
+                        // this for one error
+//                        val messages = extractMessageFromErrorResponse(errorResponse)
+                        // this for list of errors
+                        val messages = extractMessagesFromErrorResponse(errorResponse)
+                        if (messages.isNotEmpty()) {
+                            emit(Result.Error(DataError.Network.BAD_REQUEST, messages))
+                        } else {
+                            emit(Result.Error(DataError.Network.BAD_REQUEST, listOf("Unknown error occurred")))
+                        }
                     } // Bad Request
                     404 -> emit(Result.Error(DataError.Network.NOT_FOUND)) // Not Found
                     405 -> emit(Result.Error(DataError.Network.METHOD_NOT_ALLOWED)) // Method Not Allowed
@@ -71,6 +77,36 @@ class PostsRepositoryImp @Inject constructor(
             }
         }
         return "Unknown error occurred"
+    }
+    private fun extractMessagesFromErrorResponse(errorResponse: String?): List<String> {
+        val messages = mutableListOf<String>()
+        errorResponse?.let {
+            try {
+                val jsonObject = JSONObject(it)
+                if (jsonObject.has("problem")) {
+                    // Single error message structure
+                    messages.add(jsonObject.getString("problem"))
+                } else if (jsonObject.has("errors")) {
+                    // Multiple errors structure
+                    val errorsObject = jsonObject.getJSONObject("errors")
+                    val keys = errorsObject.keys()
+                    while (keys.hasNext()) {
+                        val key = keys.next()
+                        val errorMessage = errorsObject.getString(key)
+                        messages.add(errorMessage)
+                    }
+                } else {
+                    // Handle any other unexpected structure
+                    messages.add("Unknown error occurred")
+                }
+            } catch (e: JSONException) {
+                e.printStackTrace()
+                messages.add("Error parsing response")
+            }
+        } ?: run {
+            messages.add("Empty or null response")
+        }
+        return messages
     }
 
     override suspend fun getAllPosts(): Flow<com.iscoding.mytask.domain.error.Result<List<Post>, DataError.Network>> =

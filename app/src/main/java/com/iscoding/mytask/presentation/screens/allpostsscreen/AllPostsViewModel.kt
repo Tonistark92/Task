@@ -47,7 +47,7 @@ class AllPostsViewModel @Inject constructor(
                             DataError.Network.GATEWAY_TIMEOUT -> TODO()
                             DataError.Network.METHOD_NOT_ALLOWED -> TODO()
                             DataError.Network.BAD_REQUEST -> {
-                                _state.value = _state.value.copy(errorMessage = UiText.DynamicString(result.message!!))
+                                _state.value = _state.value.copy(errorMessage = UiText.DynamicStringList(result.messages!!))
 
 
                             }
