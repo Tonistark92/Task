@@ -15,14 +15,20 @@ import com.iscoding.mytask.R
 import com.iscoding.mytask.databinding.FragmentAllPostsBinding
 import com.iscoding.mytask.databinding.FragmentDetailsBinding
 import com.iscoding.mytask.presentation.screens.allpostsscreen.AllPostsFragmentDirections
+import com.iscoding.mytask.presentation.screens.allpostsscreen.AllPostsViewModel
 import com.iscoding.mytask.presentation.screens.allpostsscreen.adapter.ItemAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-@AndroidEntryPoint
 class DetailsFragment : Fragment() {
     private val args: DetailsFragmentArgs by navArgs()
-    val detailsViewModel: DetailsViewModel by viewModels()
+    // with daggar
+//    private val detailsViewModel: DetailsViewModel by viewModels()
+    // with koin
+    private val detailsViewModel by viewModel<DetailsViewModel>()
+    // with compose koin
+//    val viewmodel = getViewModel<DetailsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -14,10 +14,16 @@ import com.iscoding.mytask.databinding.FragmentAllPostsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import com.iscoding.mytask.presentation.screens.allpostsscreen.adapter.ItemAdapter
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.getViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-@AndroidEntryPoint
 class AllPostsFragment : Fragment() {
-    private val viewModel: AllPostsViewModel by viewModels()
+    // with daggar
+//    private val viewModel: AllPostsViewModel by viewModels()
+    // with koin
+    private val viewModel by viewModel<AllPostsViewModel>()
+    // with compose koin
+//    val viewmodel = getViewModel<AllPostsViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getAllPosts()
