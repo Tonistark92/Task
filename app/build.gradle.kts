@@ -35,9 +35,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
+//    kotlinOptions {
+//        jvmTarget = "17"
+//    }
     buildFeatures {
         viewBinding =true
 
@@ -74,9 +74,6 @@ dependencies {
 
 
     //coroutine testing
-    androidTestImplementation ("androidx.compose.ui:uitest-junit4:1.8.3")
-    testImplementation ("org.jetbrains.kotlinx:kotlinxcoroutines-test:1.5.0")
-
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
 }
 //kapt {
