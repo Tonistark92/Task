@@ -1,4 +1,4 @@
-package com.iscoding.mytask.util
+package com.iscoding.mytask
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

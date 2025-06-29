@@ -4,7 +4,7 @@ import android.util.Log
 import com.iscoding.mytask.data.remote.PostRemoteDataSource
 import com.iscoding.mytask.data.remote.dto.Post
 import com.iscoding.mytask.domain.repository.PostsRepository
-import com.iscoding.mytask.util.Resource
+import com.iscoding.mytask.presentation.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

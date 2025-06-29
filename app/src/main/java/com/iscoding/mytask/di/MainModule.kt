@@ -2,7 +2,7 @@ package com.iscoding.mytask.di
 
 import com.google.gson.Gson
 import com.iscoding.mytask.data.remote.PostRemoteDataSource
-import com.iscoding.mytask.domain.Constatns
+import com.iscoding.mytask.data.remote.util.Constatns
 import com.iscoding.mytask.domain.repository.PostsRepository
 import com.iscoding.mytask.domain.usecases.GetAllPosts
 import com.iscoding.mytask.domain.usecases.GetPost
