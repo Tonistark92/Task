@@ -1,13 +1,10 @@
 package com.iscoding.mytask.presentation.screens.detailsScreen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.fragment.navArgs
-import com.iscoding.mytask.domain.error.DataError
-import com.iscoding.mytask.domain.error.Result
+import com.iscoding.mytask.domain.error_models.DataError
+import com.iscoding.mytask.domain.error_models.Result
 import com.iscoding.mytask.domain.usecases.PostsUseCase
-import com.iscoding.mytask.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

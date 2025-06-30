@@ -1,17 +1,18 @@
 package com.iscoding.mytask.presentation.screens.allpostsscreen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iscoding.mytask.domain.error.DataError
-import com.iscoding.mytask.domain.error.Result
+import com.iscoding.mytask.R
+import com.iscoding.mytask.data.remote.mapper.toTimedPost
+import com.iscoding.mytask.domain.error_models.DataError
+import com.iscoding.mytask.domain.error_models.Result
 import com.iscoding.mytask.domain.usecases.PostsUseCase
-import com.iscoding.mytask.util.Resource
-import com.iscoding.mytask.util.UiText
-import com.iscoding.mytask.util.asUiText
+import com.iscoding.mytask.presentation.util.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,7 +23,9 @@ class AllPostsViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(AllPostsState())
     val state get() = _state.asStateFlow()
-
+    init {
+        getAllPosts()
+    }
 
     fun getAllPosts() {
         viewModelScope.launch {
@@ -30,50 +33,99 @@ class AllPostsViewModel @Inject constructor(
                 when(result){
 
                     is Result.Error -> {
-                        _state.value = _state.value.copy(isLoading = false)
-                        when (result.error){
-
-                            DataError.Network.REQUEST_TIMEOUT ->{
-                                //this is a way for localization string resources errors using UI text
-                                _state.value = _state.value.copy(errorMessage = result.error.asUiText())
-                            }
-                            DataError.Network.TOO_MANY_REQUESTS -> TODO()
-                            DataError.Network.NO_INTERNET -> TODO()
-                            DataError.Network.PAYLOAD_TOO_LARGE -> TODO()
-                            DataError.Network.SERVER_ERROR -> TODO()
-                            DataError.Network.SERVICE_UNAVAILABLE -> TODO()
-                            DataError.Network.NOT_IMPLEMENTED -> TODO()
-                            DataError.Network.BAD_GATEWAY -> TODO()
-                            DataError.Network.GATEWAY_TIMEOUT -> TODO()
-                            DataError.Network.METHOD_NOT_ALLOWED -> TODO()
-                            DataError.Network.BAD_REQUEST -> {
-                                _state.value = _state.value.copy(errorMessage = UiText.DynamicStringList(result.messages!!))
-
-
-                            }
-                            DataError.Network.NOT_FOUND -> TODO()
-                            DataError.Network.UNSUPPORTED_MEDIA_TYPE -> TODO()
-                            DataError.Network.CONFLICT -> TODO()
-                            DataError.Network.PRECONDITION_FAILED -> TODO()
-                            DataError.Network.SERIALIZATION -> TODO()
-                            DataError.Network.UNKNOWN -> TODO()
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                errorMessage = mapErrorToUiText(result.error, result.messages)
+                            )
                         }
                     }
                     is Result.Loading -> {
+                        delay(2000)
                         _state.value = _state.value.copy(isLoading = result.isLoading)
                     }
                     is Result.Success -> {
-                        _state.value = _state.value.copy(
-                                posts = result.data,
+
+                        _state.update { currentState ->
+                            val list = result.data.map { it.toTimedPost() }
+                            currentState.copy(
+                                posts = list,
                                 isLoading = false
                             )
+                        }
+
                     }
                 }
 
             }
 
+        }
 
-            // old approach
+
+    }
+    private fun mapErrorToUiText(error: DataError.Network, messages: List<String>? = null): UiText {
+        return when (error) {
+            DataError.Network.REQUEST_TIMEOUT ->
+                UiText.StringResource(R.string.the_request_timed_out)
+
+            DataError.Network.TOO_MANY_REQUESTS ->
+                UiText.StringResource(R.string.youve_hit_your_rate_limit)
+
+            DataError.Network.NO_INTERNET ->
+                UiText.StringResource(R.string.no_internet)
+
+            DataError.Network.PAYLOAD_TOO_LARGE ->
+                UiText.StringResource(R.string.file_too_large)
+
+            DataError.Network.SERVER_ERROR ->
+                UiText.StringResource(R.string.server_error)
+
+            DataError.Network.SERVICE_UNAVAILABLE ->
+                UiText.StringResource(R.string.service_unavailable)
+
+            DataError.Network.NOT_IMPLEMENTED ->
+                UiText.StringResource(R.string.not_implemented)
+
+            DataError.Network.BAD_GATEWAY ->
+                UiText.StringResource(R.string.bad_gateway)
+
+            DataError.Network.GATEWAY_TIMEOUT ->
+                UiText.StringResource(R.string.gateway_timeout)
+
+            DataError.Network.METHOD_NOT_ALLOWED ->
+                UiText.StringResource(R.string.method_not_allowed)
+
+            DataError.Network.BAD_REQUEST -> {
+                val safeMessages = messages.orEmpty()
+                if (safeMessages.isNotEmpty()) {
+                    UiText.DynamicStringList(safeMessages)
+                } else {
+                    UiText.StringResource(R.string.bad_request)
+                }
+            }
+
+            DataError.Network.NOT_FOUND ->
+                UiText.StringResource(R.string.not_found)
+
+            DataError.Network.UNSUPPORTED_MEDIA_TYPE ->
+                UiText.StringResource(R.string.unsupported_media_type)
+
+            DataError.Network.CONFLICT ->
+                UiText.StringResource(R.string.conflict)
+
+            DataError.Network.PRECONDITION_FAILED ->
+                UiText.StringResource(R.string.precondition_failed)
+
+            DataError.Network.SERIALIZATION ->
+                UiText.StringResource(R.string.error_serialization)
+
+            DataError.Network.UNKNOWN ->
+                UiText.StringResource(R.string.unknown_error)
+        }
+    }
+
+}
+// old approach
 
 
 //            useCase.getAllPosts().collect { result ->
@@ -93,11 +145,9 @@ class AllPostsViewModel @Inject constructor(
 //                    }
 //                }
 //            }
-        }
-    }
-}
 
-/// this view modle if want to create retry api call
+
+/// this viewmodel if want to create retry api call
 //@HiltViewModel
 //class AllPostsViewModel @Inject constructor(
 //    private val useCase: PostsUseCase

@@ -1,8 +1,8 @@
-package com.iscoding.mytask.util
+package com.iscoding.mytask.presentation.util
 
 import com.iscoding.mytask.R
-import com.iscoding.mytask.domain.error.DataError
-import com.iscoding.mytask.domain.error.Result
+import com.iscoding.mytask.domain.error_models.DataError
+import com.iscoding.mytask.domain.error_models.Result
 
 fun DataError.asUiText(): UiText {
     return when (this) {

@@ -20,7 +20,6 @@ class AllPostsFragment : Fragment() {
     private val viewModel: AllPostsViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.getAllPosts()
 
     }
 
@@ -64,7 +63,7 @@ class AllPostsFragment : Fragment() {
 
 
         // Inflate the layout for this fragment
-        return return binding.root
+         return binding.root
     }
 
 

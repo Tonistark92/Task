@@ -2,8 +2,10 @@ package com.iscoding.mytask.di
 
 import com.google.gson.Gson
 import com.iscoding.mytask.data.remote.PostRemoteDataSource
+import com.iscoding.mytask.data.remote.PostRemoteDataSourceImpl
+import com.iscoding.mytask.data.remote.PostService
 import com.iscoding.mytask.data.remote.RetryInterceptor
-import com.iscoding.mytask.domain.Constatns
+import com.iscoding.mytask.data.remote.util.Constatns
 import com.iscoding.mytask.domain.repository.PostsRepository
 import com.iscoding.mytask.domain.usecases.GetAllPosts
 import com.iscoding.mytask.domain.usecases.GetPost
@@ -36,13 +38,15 @@ object MainModule {
     fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
+//            .readTimeout(15, TimeUnit.SECONDS)
+//            .connectTimeout(15, TimeUnit.SECONDS)
             .addInterceptor(RetryInterceptor(maxRetries = 3, retryIntervalSeconds = 2))
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideRetrofit(client: OkHttpClient): PostRemoteDataSource {
+    fun provideRetrofit(client: OkHttpClient): PostService {
 
         return Retrofit.Builder()
             .baseUrl(Constatns.BASE_URL)
@@ -51,6 +55,12 @@ object MainModule {
             .build()
             .create()
     }
+
+
+    @Provides
+    fun providePostRemoteDataSource(
+        api: PostService
+    ): PostRemoteDataSource = PostRemoteDataSourceImpl(api)
 
     @Singleton
     @Provides

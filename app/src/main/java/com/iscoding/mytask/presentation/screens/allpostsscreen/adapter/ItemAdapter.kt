@@ -2,17 +2,15 @@ package com.iscoding.mytask.presentation.screens.allpostsscreen.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.iscoding.mytask.data.remote.dto.Post
 import com.iscoding.mytask.databinding.ListItemBinding
-import com.iscoding.mytask.presentation.screens.allpostsscreen.AllPostsFragmentDirections
+import com.iscoding.mytask.domain.model.TimedPost
 
 
 class ItemAdapter(private val onItemClick: (Int) -> Unit)  : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
 
-    private var dataset: List<Post> = emptyList()
+    private var dataset: List<TimedPost> = emptyList()
 
     inner class ItemViewHolder(val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -37,7 +35,7 @@ class ItemAdapter(private val onItemClick: (Int) -> Unit)  : RecyclerView.Adapte
     }
 
     // Function to update the dataset using DiffUtil
-    fun updateDataset(newDataset: List<Post>) {
+    fun updateDataset(newDataset: List<TimedPost>) {
         val diffCallback = PostDiffCallback(dataset, newDataset)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
 
@@ -46,7 +44,7 @@ class ItemAdapter(private val onItemClick: (Int) -> Unit)  : RecyclerView.Adapte
     }
 
     // DiffUtil.Callback implementation
-    private class PostDiffCallback(private val oldList: List<Post>, private val newList: List<Post>) : DiffUtil.Callback() {
+    private class PostDiffCallback(private val oldList: List<TimedPost>, private val newList: List<TimedPost>) : DiffUtil.Callback() {
         override fun getOldListSize(): Int = oldList.size
         override fun getNewListSize(): Int = newList.size
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
