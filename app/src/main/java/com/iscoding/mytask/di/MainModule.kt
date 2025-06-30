@@ -21,52 +21,52 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
-object MainModule {
-
-    @Provides
-    @Singleton
-    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        return loggingInterceptor
-    }
-
-    @Provides
-    @Singleton
-    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
-//            .readTimeout(15, TimeUnit.SECONDS)
-//            .connectTimeout(15, TimeUnit.SECONDS)
-            .addInterceptor(RetryInterceptor(maxRetries = 3, retryIntervalSeconds = 2))
-            .build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideRetrofit(client: OkHttpClient): PostService {
-
-        return Retrofit.Builder()
-            .baseUrl(Constatns.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(Gson()))
-            .client(client)
-            .build()
-            .create()
-    }
-
-
-    @Provides
-    fun providePostRemoteDataSource(
-        api: PostService
-    ): PostRemoteDataSource = PostRemoteDataSourceImpl(api)
-
-    @Singleton
-    @Provides
-    fun providePostUseCase (postRepository: PostsRepository ) = PostsUseCase(
-        getAllPosts = GetAllPosts(postRepository),
-        getPost = GetPost(postRepository)
-    )
-
-}
+//@Module
+//@InstallIn(SingletonComponent::class)
+//object MainModule {
+//
+//    @Provides
+//    @Singleton
+//    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
+//        val loggingInterceptor = HttpLoggingInterceptor()
+//        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+//        return loggingInterceptor
+//    }
+//
+//    @Provides
+//    @Singleton
+//    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+//        return OkHttpClient.Builder()
+//            .addInterceptor(loggingInterceptor)
+////            .readTimeout(15, TimeUnit.SECONDS)
+////            .connectTimeout(15, TimeUnit.SECONDS)
+//            .addInterceptor(RetryInterceptor(maxRetries = 3, retryIntervalSeconds = 2))
+//            .build()
+//    }
+//
+//    @Provides
+//    @Singleton
+//    fun provideRetrofit(client: OkHttpClient): PostService {
+//
+//        return Retrofit.Builder()
+//            .baseUrl(Constatns.BASE_URL)
+//            .addConverterFactory(GsonConverterFactory.create(Gson()))
+//            .client(client)
+//            .build()
+//            .create()
+//    }
+//
+//
+//    @Provides
+//    fun providePostRemoteDataSource(
+//        api: PostService
+//    ): PostRemoteDataSource = PostRemoteDataSourceImpl(api)
+//
+//    @Singleton
+//    @Provides
+//    fun providePostUseCase (postRepository: PostsRepository ) = PostsUseCase(
+//        getAllPosts = GetAllPosts(postRepository),
+//        getPost = GetPost(postRepository)
+//    )
+//
+//}

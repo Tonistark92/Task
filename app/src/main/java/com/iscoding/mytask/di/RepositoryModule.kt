@@ -1,7 +1,5 @@
 package com.iscoding.mytask.di
 
-import com.iscoding.mytask.data.remote.PostRemoteDataSource
-import com.iscoding.mytask.data.remote.PostRemoteDataSourceImpl
 import com.iscoding.mytask.data.repository.PostsRepositoryImp
 import com.iscoding.mytask.domain.repository.PostsRepository
 import dagger.Binds
@@ -21,11 +19,6 @@ abstract class RepositoryModule {
         postsRepositoryImp: PostsRepositoryImp
     ): PostsRepository
 
-//    @Binds
-//    @Singleton
-//    abstract fun bindRemoteDataSource(
-//        postRemoteDataSourceImpl: PostRemoteDataSourceImpl
-//    ): PostRemoteDataSource
 
 
 }
